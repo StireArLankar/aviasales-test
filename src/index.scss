@@ -1,4 +1,9 @@
 @import 'scss/normalize.scss';
+@import 'scss/colors.scss';
+
+body {
+  background-color: $bg-color;
+}
 
 .bold {
   font-weight: 700;

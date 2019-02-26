@@ -1,14 +1,22 @@
+$width: 820px;
+
 .app__wrapper {
   display: flex;
+  flex-direction: column;
   margin: 20vh auto 0;
-  max-width: 1200px;
+  max-width: $width;
   justify-content: space-between;
 }
 
-.app__points {
-  width: 30%;
+.app__main {
+  display: flex;
+  justify-content: space-between;
 }
 
-.app__map {
-  width: 70%;
+.app__left-row {
+  width: 230px * 100% / $width;
+}
+
+.app__right-row {
+  width: 570px * 100% / $width;
 }

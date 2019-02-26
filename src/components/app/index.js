@@ -1,39 +1,45 @@
-import React, {useState} from 'react';
-import Map from '../map';
-import Points from '../points';
+import React, { useState, useEffect } from 'react';
+import Logo from '../logo';
+import Filters from '../filters';
+import Tickets from '../tickets';
 import './style.scss';
 
+const prefix = `app`;
+
 const App = props => {
-  const [map, setMap] = useState();
-  const [points, setPoints] = useState([]);
+  const [tickets, setTickets] = useState([]);
+  // const [filteredTickets, setFilteredTickets] = useState([]);
 
-  const createPoint = (name) => {
-    const coords = map.getCenter();
-    setPoints([...points, {coords, name}]);
-  }
+  useEffect(() => {
+    const url = process.env.PUBLIC_URL + '/tickets.json';
 
-  const updatePoint = (index, coords) => {
-    const { name } = points[index];
-    const temp = [...points.slice(0, index), {coords, name}, ...points.slice(index + 1)];
-    setPoints([...temp]);
-  }
+    fetch(url)
+      .then(res => res.json())
+      .then(({ tickets }) => {
+        const temp = [...tickets].sort((a,b) => a.price - b.price).map((ticket, index) => ({...ticket, id: index}))
+        setTickets(temp)
+        // setFilteredTickets(temp)
+      })
+  }, [])
 
-  const updateList = (points) => {
-    setPoints(points);
-  }
-
-  const getMap = (map) => {
-    setMap(map);
-  }
-
+  // const filterTickets = () => {
+  //   const temp = tickets.filter(ticket => true)
+  //   setFilteredTickets(temp)
+  // }
+ 
   return (
-    <div className={`app__wrapper`}>
-      <div className={`app__points`}>
-        <Points createPoint={createPoint} points={points} updateList={updateList}/>
-      </div>
-      <div className={`app__map`}>
-        <Map getMap={getMap} points={points} updatePoint={updatePoint}/>
-      </div>
+    <div className={`${prefix}__wrapper`}>
+      <header className={`${prefix}__header`}>
+        <Logo />
+      </header>
+      <main className={`${prefix}__main`}>
+        <div className={`${prefix}__left-row`}>
+          <Filters />
+        </div>
+        <div className={`${prefix}__right-row`}>
+          <Tickets tickets={tickets}/>
+        </div>
+      </main>
     </div>
   );
 }
