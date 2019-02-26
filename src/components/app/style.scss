@@ -1,0 +1,14 @@
+.app__wrapper {
+  display: flex;
+  margin: 20vh auto 0;
+  max-width: 1200px;
+  justify-content: space-between;
+}
+
+.app__points {
+  width: 30%;
+}
+
+.app__map {
+  width: 70%;
+}
