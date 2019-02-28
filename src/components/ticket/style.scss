@@ -6,7 +6,21 @@
   background-color: white;
   border-radius: 5px;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
+  animation-name: bump;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in-out;
 }
+
+@keyframes bump {
+  from { 
+    transform: translateY(20px) scale(0.97);
+    opacity: 0.4;
+  }
+  to { 
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+ }
 
 .ticket__left-row {
   width: 200px;
