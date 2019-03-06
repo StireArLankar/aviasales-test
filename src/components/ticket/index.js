@@ -1,14 +1,30 @@
-import React from 'react';
-import Logo from './logo';
-import Button from './button';
-import Place from './place';
-import Stops from './stops';
+import React, { useContext } from 'react'
+import Logo from './logo'
+import Button from './button'
+import Place from './place'
+import Stops from './stops'
 
-import './style.scss';
+import { CurrencyContext } from '../context'
 
-import prefix from './_prefix';
+import './style.scss'
+
+import prefix from './_prefix'
+
+const currencySymbol = {
+  'RUB': '₽',
+  'USD': '$',
+  'EUR': '€'
+}
+
+const prettyNumber = number => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ` `);
+}
 
 const Ticket = ({ data }) => {
+  const { currency, currencyRates } = useContext(CurrencyContext)
+
+  const price = Math.round(data.price * currencyRates[currency])
+
   const from = {
     city: data.origin,
     name: data.origin_name,
@@ -27,7 +43,7 @@ const Ticket = ({ data }) => {
     <article className={`${prefix}__wrapper`}>
       <div className={`${prefix}__left-row`}>
         <Logo source={data.carrier} />
-        <Button price={data.price} />
+        <Button price={prettyNumber(price)} symbol={currencySymbol[currency]} />
       </div>
       <div className={`${prefix}__right-row`}>
         <Place data={from} align={`left`} />

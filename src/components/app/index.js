@@ -1,46 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import Logo from '../logo';
-import Filters from '../filters';
-import Tickets from '../tickets';
-import './style.scss';
+import React, { useState, useEffect } from 'react'
+import { CurrencyContext } from '../context'
+import Logo from '../logo'
+import Filters from '../filters'
+import Tickets from '../tickets'
+import './style.scss'
 
-const prefix = `app`;
-
-// const defaultStops = {
-//   Infinity: true,
-//   0: false, 
-//   1: false,
-//   2: false,
-//   3: false
-// }
+const prefix = `app`
 
 const App = props => {
   const [tickets, setTickets] = useState([])
   const [currency, setCurrency] = useState(`RUB`)
+  const [currencyList, setCurrencyList] = useState([`RUB`])
+  const [currencyRates, setCurrencyRates] = useState({'RUB': 1})
   const [filteredTickets, setFilteredTickets] = useState([])
-  const [defaultStops, setDefaultStops] = useState({Infinity: true})
+  const [defaultStops, setDefaultStops] = useState({ Infinity: true })
   const [stops, setStops] = useState(defaultStops)
 
+  // useEffect(() => {
+  //   const url = process.env.PUBLIC_URL + '/tickets.json'
+
+  //   fetch(url)
+  //     .then(res => res.json())
+  //     .then(({ tickets }) => {
+  //       const temp = [...tickets]
+  //         .sort((a, b) => a.price - b.price)
+  //         .map((ticket, index) => ({ ...ticket, id: index }))
+  //       setTickets(temp)
+
+  //       const stops = temp.reduce((acc, cur) => {
+  //         acc[cur.stops] = false
+  //         return acc
+  //       }, {Infinity: true})
+  //       setDefaultStops(stops)
+  //       setStops(stops)
+
+  //       setFilteredTickets(temp)
+  //     })
+  // }, [])
+
+  const getTickets = async () => {
+    const url = process.env.PUBLIC_URL + '/tickets.json'
+    const result = await fetch(url).then(res => res.json())
+
+    const tickets = [...result.tickets]
+      .sort((a, b) => a.price - b.price)
+      .map((ticket, index) => ({ ...ticket, id: index }))
+
+    setFilteredTickets(tickets)
+    setTickets(tickets)
+
+    const stops = tickets.reduce((acc, cur) => {
+        acc[cur.stops] = false
+        return acc
+      },{ Infinity: true })
+
+    setDefaultStops(stops)
+    setStops(stops)
+  }
+
+  const getConvertRates = async () => {
+    const url = process.env.PUBLIC_URL + '/fixer.io.api.json'
+    const result = await fetch(url).then(res => res.json())
+
+    const rates = {...result.rates, 'RUB': 1}
+    setCurrencyRates(rates)
+    setCurrencyList(Object.keys(rates).reverse())
+  }
+
   useEffect(() => {
-    const url = process.env.PUBLIC_URL + '/tickets.json';
-
-    fetch(url)
-      .then(res => res.json())
-      .then(({ tickets }) => {
-        const temp = [...tickets]
-          .sort((a, b) => a.price - b.price)
-          .map((ticket, index) => ({ ...ticket, id: index }));
-        setTickets(temp)
-
-        const stops = temp.reduce((acc, cur) => {
-          acc[cur.stops] = false
-          return acc
-        }, {Infinity: true})
-        setDefaultStops(stops)
-        setStops(stops)
-
-        setFilteredTickets(temp)
-      })
+    getTickets()
+    getConvertRates()
   }, [])
 
   // const filterTickets = () => {
@@ -57,10 +86,6 @@ const App = props => {
     setFilteredTickets(temp)
   }, [stops])
 
-  const onCurrencyChange = currency => {
-    setCurrency(currency)
-  }
-
   const onStopsChange = (stop, isOnlyThis) => {
     if (stop.toString() === `Infinity`) {
       setStops(defaultStops)
@@ -68,12 +93,12 @@ const App = props => {
     }
 
     if (isOnlyThis) {
-      const temp = {...defaultStops, [`Infinity`]: false, [stop]: true}
+      const temp = { ...defaultStops, [`Infinity`]: false, [stop]: true }
       setStops(temp)
       return
     }
 
-    const temp = {...stops, [stop]: !stops[stop], [`Infinity`]: false}
+    const temp = { ...stops, [stop]: !stops[stop], [`Infinity`]: false }
 
     const isAnyChecked = Object.values(temp).reduce((acc, cur) => {
       return acc || cur
@@ -97,25 +122,32 @@ const App = props => {
   }
 
   return (
-    <div className={`${prefix}__wrapper`}>
-      <header className={`${prefix}__header`}>
-        <Logo />
-      </header>
-      <main className={`${prefix}__main`}>
-        <div className={`${prefix}__left-row`}>
-          <Filters
-            currency={currency}
-            onCurrencyChange={onCurrencyChange}
-            stops={stops}
-            onStopsChange={onStopsChange}
-          />
-        </div>
-        <div className={`${prefix}__right-row`}>
-          <Tickets tickets={filteredTickets} />
-        </div>
-      </main>
-    </div>
-  );
-};
+    <CurrencyContext.Provider 
+      value={{
+        currency, 
+        currencyRates, 
+        currencyList,
+        setCurrency
+      }}
+    >
+      <div className={`${prefix}__wrapper`}>
+        <header className={`${prefix}__header`}>
+          <Logo />
+        </header>
+        <main className={`${prefix}__main`}>
+          <div className={`${prefix}__left-row`}>
+            <Filters
+              stops={stops}
+              onStopsChange={onStopsChange}
+            />
+          </div>
+          <div className={`${prefix}__right-row`}>
+            <Tickets tickets={filteredTickets} />
+          </div>
+        </main>
+      </div>
+    </CurrencyContext.Provider>
+  )
+}
 
-export default App;
+export default App

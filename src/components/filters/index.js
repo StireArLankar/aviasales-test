@@ -5,10 +5,10 @@ import './style.scss';
 
 import prefix from './_prefix.js';
 
-const Filters = ({ currency, stops, onCurrencyChange, onStopsChange }) => {
+const Filters = ({ stops,  onStopsChange }) => {
   return (
     <div className={`${prefix}__wrapper`}>
-      <Currency currency={currency} onChange={onCurrencyChange}/>
+      <Currency />
       <Stops stops={stops} onStopsChange={onStopsChange}/>
     </div>
   );

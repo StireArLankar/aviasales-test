@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import Checkbox from './checkbox';
 
 import prefix from './_prefix.js';
@@ -7,7 +7,9 @@ const stopsDict = {
   0: `Без пересадок`,
   1: `1 пересадка`,
   2: `2 пересадки`,
-  3: `3 пересадки`
+  3: `3 пересадки`,
+  4: `4 пересадки`,
+  5: `5 пересадок`
 };
 
 const Stops = ({ stops, onStopsChange }) => {
@@ -33,7 +35,7 @@ const Stops = ({ stops, onStopsChange }) => {
   }
 
   return (
-    <Fragment>
+    <div  className={`${prefix}__stops`}>
       <h3 className={`${prefix}__subtitle`}>Количество пересадок</h3>
       <ul className={`${prefix}__stops-list`}>
         <li key={`all`} className={`${prefix}__stops-item`}>
@@ -46,7 +48,7 @@ const Stops = ({ stops, onStopsChange }) => {
         </li>
         {renderCheckboxes()}
       </ul>
-    </Fragment>
+    </div>
   );
 };
 

@@ -1,5 +1,6 @@
 @import 'scss/normalize.scss';
 @import 'scss/colors.scss';
+@import 'scss/fonts.scss';
 
 body {
   background-color: $bg-color;
@@ -7,6 +8,7 @@ body {
   line-height: 1.2;
   font-family: "Open Sans", Arial, sans-serif;
   font-weight: 400;
+  min-width: 320px;
 }
 
 .bold {

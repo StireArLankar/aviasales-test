@@ -1,4 +1,5 @@
 @import '../../scss/colors.scss';
+@import '../../scss/sizes.scss';
 
 .filters__wrapper {
   display: flex;
@@ -7,6 +8,20 @@
   border-radius: 5px;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
   padding: 15px 0;
+  margin-bottom: 20px;
+
+  @media (max-width: $mobile-width) and (min-width:$smobile-width + 1) {
+    flex-direction: row;
+  }
+}
+
+.filters__currency {
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: $mobile-width) and (min-width:$smobile-width + 1) {
+    width: 100px;
+  }
 }
 
 .filters__subtitle {
@@ -27,6 +42,11 @@
   list-style-type: none;
   display: flex;
   margin-bottom: 35px;
+
+  @media (max-width: $mobile-width) and (min-width:$smobile-width + 1) {
+    flex-direction: column;
+    height: 100%;
+  }
 }
 
 .filters__currency-item {
@@ -35,14 +55,29 @@
   display: flex;
   margin-left: -1px;
 
+  @media (max-width: $mobile-width) and (min-width:$smobile-width + 1) {
+    margin-left: 0;
+    margin-top: -1px;
+  }
+
   &:first-child .filters__btn{
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
+
+    @media (max-width: $mobile-width) and (min-width:$smobile-width + 1) {
+      border-bottom-left-radius: 0;
+      border-top-right-radius: 5px;
+    }
   }
 
   &:last-child .filters__btn{
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+
+    @media (max-width: $mobile-width) and (min-width:$smobile-width + 1) {
+      border-top-right-radius: 0;
+      border-bottom-left-radius: 5px;
+    }
   }
 }
 
@@ -85,6 +120,15 @@
   }
 }
 
+.filters__stops {
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: $mobile-width) and (min-width:$smobile-width + 1) {
+    flex-grow: 1;
+  }
+}
+
 .filters__stops-list {
   margin: 0;
   padding: 0;
@@ -123,6 +167,7 @@
   text-align: left;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   &:hover,
   &:focus {
@@ -158,6 +203,7 @@
   color: $main-color;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+  margin-left: 5px;
 }
 
 .filters__checkbox:hover,
